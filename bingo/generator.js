@@ -1,3 +1,5 @@
+require('./seedrandom-min')
+
 //NOTICE: As of version 6, this script will only generate cards correctly for Ocarina of Time bingo
 //and as shuch should be saved alongside the regular bingo script.
 ootBingoGenerator = function(bingoList, opts) {

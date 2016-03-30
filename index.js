@@ -1,16 +1,25 @@
 var irc = require('irc');
 var client = new irc.Client('irc.speedrunslive.com', 'BlackoutBot', {
-  channels: ['#speedrunslive']
+  channels: ['#speedrunslive'],
+  stripColors: true
 });
 var generateBlackoutSeed = require('./blackout-generator')
 
 activeChannels = {};
 
-goalSetRegex = /Goal Set: ([^-]+) - ([^|]+) | (#[^\s]+)/;
+goalSetRegex = /Goal Set: ([^-]+) - ([^|]+) \| (#[^\s]+)/;
+
+client.addListener('raw', message => console.log(message));
+
+client.addListener('pm', (nick, message) => {
+  if (message.match(/^!seed/)) {
+    client.say(nick, generateBlackoutSeed())
+  }
+})
 
 client.addListener('message', function(from, to, message) {
   if (from === 'RaceBot' && to === '#speedrunslive') {
-    var r = goalSetRegex.exec;
+    var r = goalSetRegex.exec(message);
     if (r && r[1].match(/Ocarina of Time/) && r[2].match(/blackout/i)) {
       client.join(r[3]);
     }
@@ -40,7 +49,7 @@ client.addListener('message', function(from, to, message) {
         client.say(to, "Type !nonorecord to disable")
       }
     }
-    if (message.match(/^!norecord/)) {
+    if (message.match(/^!nonorecord/)) {
       if (activeChannels.hasOwnProperty(to) && activeChannels[to].norecord) {
         activeChannels[to].norecord = false;
         client.say(to, "No Record mode disabled.")

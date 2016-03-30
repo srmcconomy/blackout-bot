@@ -2,9 +2,9 @@ var bingoFunc = require('./bingo/generator')
 var bingoList = require('./bingo/goal-list')
 
 var bingoOpts = {
-  seed: getUrlParameter('seed') || Math.ceil(999999 * Math.random()).toString(),
-  mode: getUrlParameter('mode') || 'normal',
-  lang: getUrlParameter('lang') || 'name'
+  seed: Math.ceil(999999 * Math.random()).toString(),
+  mode: 'normal',
+  lang: 'name'
 };
 
 var regexes = [ {regex: /\d(?: different)? unused keys in Gerudo Training Grounds/, maxcount: 1, count: 0},
@@ -62,3 +62,5 @@ function generateBlackoutSeed() {
   } while(bad);
   return bingoOpts.seed;
 }
+
+module.exports = generateBlackoutSeed;
